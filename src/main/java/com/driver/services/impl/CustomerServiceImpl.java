@@ -51,22 +51,22 @@ public class CustomerServiceImpl implements CustomerService {
 		for (Driver driver : drivers) {
 			if (driver.getCab().getAvailable() == true) {
 				driver.getCab().setAvailable(false);
-				tripBooking.setTripStatus(TripStatus.CONFIRMED);
-				tripBooking.setBill(driver.getCab().getPerkmRate() * distanceInKm);
+				tripBooking.setStatus(TripStatus.CONFIRMED);
+				tripBooking.setBill(driver.getCab().getPerKmRate() * distanceInKm);
 				tripBooking.setFromLocation(fromLocation);
 				tripBooking.setToLocation(toLocation);
-				tripBooking.setDistinKm(distanceInKm);
+				tripBooking.setDistanceInKm(distanceInKm);
 
 
 				Customer customer = customerRepository2.findById(customerId).get();
-				List<TripBooking> list = customer.getCustomertripBookingList();
+				List<TripBooking> list = customer.getTripBookingList();
 				list.add(tripBooking);
-				customer.setCustomertripBookingList(list);
+				customer.setTripBookingList(list);
 				tripBooking.setCustomer(customer);
 
-				List<TripBooking> list1 = driver.getDrivertripBookingList();
+				List<TripBooking> list1 = driver.getTripBooking();
 				list1.add(tripBooking);
-				driver.setDrivertripBookingList(list1);
+				driver.setTripBooking(list1);
 				tripBooking.setDriver(driver);
 
 				driverRepository2.save(driver);
@@ -85,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void cancelTrip(Integer tripId){
 		//Cancel the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking trip=tripBookingRepository2.findById(tripId).get();
-		trip.setTripStatus(TripStatus.CANCELED);
+		trip.setStatus(TripStatus.CANCELED);
 		trip.setBill(0);
 		trip.getDriver().getCab().setAvailable(Boolean.TRUE);
 		tripBookingRepository2.save(trip);
@@ -97,8 +97,8 @@ public class CustomerServiceImpl implements CustomerService {
 		//Complete the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking tripBooking=new TripBooking();
 		tripBooking=tripBookingRepository2.findById(tripId).get();
-		tripBooking.setTripStatus(TripStatus.COMPLETED);
-		int bill = tripBooking.getDriver().getCab().getPerkmRate()*tripBooking.getDistinKm();
+		tripBooking.setStatus(TripStatus.COMPLETED);
+		int bill = tripBooking.getDriver().getCab().getPerKmRate()*tripBooking.getDistanceInKm();
 		tripBooking.setBill(bill);
 		tripBooking.getDriver().getCab().setAvailable(Boolean.TRUE);
 		tripBookingRepository2.save(tripBooking);

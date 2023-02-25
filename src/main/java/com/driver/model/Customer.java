@@ -1,34 +1,32 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="customer")
-public class Customer{
+@Entity
+@Table(name = "customer")
+public class Customer {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int customerId;
-    private String password;
+
     private String mobile;
-    //customer is parent wrt to tripBooking
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-    List<TripBooking> customertripBookingList;
 
-    public List<TripBooking> getCustomertripBookingList() {
-        return customertripBookingList;
-    }
+    private String password;
 
-    public void setCustomertripBookingList(List<TripBooking> customertripBookingList) {
-        this.customertripBookingList = customertripBookingList;
-    }
-
-    public Customer(int customerId, String password, String mobile) {
-        this.customerId = customerId;
-        this.password = password;
-        this.mobile = mobile;
-    }
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<TripBooking> tripBookingList = new ArrayList<>();
 
     public Customer() {
+    }
+
+    public Customer(int customerId, String mobile, String password, List<TripBooking> tripBookingList) {
+        this.customerId = customerId;
+        this.mobile = mobile;
+        this.password = password;
+        this.tripBookingList = tripBookingList;
     }
 
     public int getCustomerId() {
@@ -39,6 +37,14 @@ public class Customer{
         this.customerId = customerId;
     }
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -47,11 +53,12 @@ public class Customer{
         this.password = password;
     }
 
-    public String getMobile() {
-        return mobile;
+    public List<TripBooking> getTripBookingList() {
+        return tripBookingList;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setTripBookingList(List<TripBooking> tripBookingList) {
+        this.tripBookingList = tripBookingList;
     }
+
 }
